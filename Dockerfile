@@ -29,7 +29,7 @@ COPY --from=build /app/package*.json ./
 COPY --from=build /app/server.js ./
 
 # 使用定义的 npm 命令启动服务
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "start" ]
 
 # 暴露端口，以便外部访问你的应用
 EXPOSE 3000
