@@ -4,8 +4,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build 
-# 这一步假设你的应用需要build，如果不需要可以删除
 
 # 第二阶段：只从小的基础镜像开始，并复制第一阶段的构建结果
 FROM node:16-alpine
