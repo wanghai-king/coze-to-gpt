@@ -1,23 +1,16 @@
-# 基础镜像
-FROM node:16
-
-# 设置工作目录
+# 第一阶段：使用完整的 Node 镜像构建应用
+FROM node:16 AS build
 WORKDIR /app
-
-# 将 package.json 和 package-lock.json 文件复制到工作目录
 COPY package*.json ./
-
-# 安装项目依赖
 RUN npm install
-
-# 安装全局依赖 nodemon
-RUN npm install -g nodemon
-
-# 将项目的其他文件复制到工作目录
 COPY . .
+RUN npm run build 
+# 这一步假设你的应用需要build，如果不需要可以删除
 
-# 暴露端口，以便外部访问你的应用
+# 第二阶段：只从小的基础镜像开始，并复制第一阶段的构建结果
+FROM node:16-alpine
+WORKDIR /app
+# 只复制构建出的应用和依赖，删除了所有源代码和构建工具
+COPY --from=build /app ./
 EXPOSE 3000
-
-# 使用定义的 npm 命令启动服务
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "start" ]
